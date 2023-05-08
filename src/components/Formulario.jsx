@@ -1,9 +1,29 @@
-import { Grid, Typography } from '@mui/material';
-import { InputFormulario } from './InputFormulario';
 import { useState } from 'react';
+import { Box, Button, Grid, Typography } from '@mui/material';
+import { InputFormulario } from './InputFormulario';
+import { endpointGetCoordinates } from '../endpoints';
+import { SelectFormulario } from './SelectFormulario';
+
+const ciudades = [
+  {
+    id: '0',
+    value: 'Avellaneda'
+  },
+  {
+    id: '1',
+    value: 'La Plata'
+  },
+  {
+    id: '2',
+    value: 'Mar del Plata'
+  }
+];
 
 export const Formulario = () => {
+  const [coordinates, setCoordinates] = useState(null);
   const [ coloresForm, setColoresForm ] = useState({
+    colorCiudad: 'primary',
+    colorCodigoPostal: 'primary',
     colorCalle:'primary',
     colorAltura:'primary',
     colorCalle1:'primary',
@@ -11,7 +31,19 @@ export const Formulario = () => {
     colorPiso:'primary',
     colorUnidad:'primary',
     colorObservaciones:'primary'
-  })
+  });
+
+  async function handleSearch(event) {
+    event.preventDefault();
+    const idCiudad = document.getElementById('ciudad').value;
+    const codigoPostal = document.getElementById('codigoPostal').value;
+    const calle = document.getElementById('calle').value;
+    const altura = document.getElementById('altura').value;
+    const address = `${ calle }+${ altura },${ ciudades[idCiudad] },${ codigoPostal }`;
+    const data = await endpointGetCoordinates(address);
+    setCoordinates(data ? data.features[0].geometry.coordinates : null);
+    console.log(data);
+  }
 
   return (
     <>
@@ -24,6 +56,8 @@ export const Formulario = () => {
         borderTop='0.3rem solid #1976D2'
       >
         <Typography variant='h5' color='primary' width='100%' paddingX={ 1 } paddingY={ 2 }>Dirección</Typography>
+        <SelectFormulario currencies={ ciudades } required={ true } label='Ciudad' id='ciudad' name='ciudad' autoComplete='off' color={ coloresForm.colorCiudad } xs={ 12 } md={ 8 } />
+        <InputFormulario required={ true } label='Código Postal' id='codigoPostal' name='codigoPostal' autoComplete='off' color={ coloresForm.colorCodigoPostal } xs={ 12 } md={ 4 } />
         <InputFormulario required={ true } label='Calle' id='calle' name='calle' autoComplete='off' color={ coloresForm.colorCalle } xs={ 12 } md={ 8 } />
         <InputFormulario required={ true } label='Altura' id='altura' name='altura' autoComplete='off' color={ coloresForm.colorAltura } xs={ 12 } md={ 4 } />
         <InputFormulario required={ false } label='Calle 1' id='calle1' name='calle1' autoComplete='off' color={ coloresForm.colorCalle1 } xs={ 12 } md={ 6 } />
@@ -31,6 +65,23 @@ export const Formulario = () => {
         <InputFormulario required={ false } label='Piso' id='piso' name='piso' autoComplete='off' color={ coloresForm.colorPiso } xs={ 12 } md={ 3 } />
         <InputFormulario required={ false } label='Unidad' id='unidad' name='unidad' autoComplete='off' color={ coloresForm.colorUnidad } xs={ 12 } md={ 3 } />
         <InputFormulario required={ false } label='Observaciones' id='observaciones' name='observaciones' autoComplete='off' color={ coloresForm.colorObservaciones } xs={ 12 } md={ 6 } />
+        
+        <Box
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          width='100%'
+        >
+          <Button 
+            variant='contained'
+            onClick={ handleSearch } 
+            sx={{
+              margin:'1.5rem'
+            }}
+          >
+            Enviar
+          </Button>
+        </Box>
       </Grid>
     </>
   )
