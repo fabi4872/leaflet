@@ -1,6 +1,20 @@
+import { useEffect, useState } from 'react';
 import { Grid, TextField } from '@mui/material';
 
-export const InputFormulario = ({ required, label, id, name, autoComplete, color, xs, md }) => {
+export const InputFormulario = ({ value, onChangeForm, required, label, id, name, autoComplete, color, xs, md }) => {
+  const [ inputValue, setInputValue ] = useState('');
+
+  const onChange = ({ target }) => {
+    setInputValue( target.value );
+    onChangeForm( target );
+  }
+
+  useEffect(() => {  
+    return () => {
+      
+    }
+  }, [ inputValue ]);
+
   return (
     <Grid
       item
@@ -16,6 +30,8 @@ export const InputFormulario = ({ required, label, id, name, autoComplete, color
         name={ name }
         autoComplete={ autoComplete }
         color={ color }
+        value={ value }
+        onChange={ onChange }
         fullWidth
       />
     </Grid>

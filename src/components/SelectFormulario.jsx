@@ -1,6 +1,20 @@
+import { useEffect, useState } from 'react';
 import { Grid, MenuItem, TextField } from '@mui/material';
 
-export const SelectFormulario = ({ value, onChangeSelect, currencies, required, label, id, name, autoComplete, color, xs, md }) => {
+export const SelectFormulario = ({ value, onChangeForm, currencies, required, label, id, name, autoComplete, color, xs, md }) => {
+  const [ inputValue, setInputValue ] = useState('');
+
+  const onChange = ({ target }) => {
+    setInputValue( target.value );
+    onChangeForm( target );
+  }
+
+  useEffect(() => {  
+    return () => {
+      
+    }
+  }, [ inputValue ]);
+
   return (
     <Grid
       item
@@ -19,7 +33,7 @@ export const SelectFormulario = ({ value, onChangeSelect, currencies, required, 
         color={ color }
         defaultValue={ currencies[0].value }
         value={ value }
-        onChange={ onChangeSelect }
+        onChange={ onChange }
         fullWidth
       >
         {currencies.map((option) => (
