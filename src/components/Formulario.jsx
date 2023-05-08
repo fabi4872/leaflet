@@ -4,6 +4,39 @@ import { InputFormulario } from './InputFormulario';
 import { endpointGetCoordinates } from '../endpoints';
 import { SelectFormulario } from './SelectFormulario';
 
+const paises = [
+  {
+    id: '0',
+    codigoPais: 'AR',
+    value: 'Argentina'
+  },
+  {
+    id: '1',
+    codigoPais: 'BR',
+    value: 'Brasil'
+  },
+  {
+    id: '2',
+    codigoPais: 'CO',
+    value: 'Colombia'
+  }
+];
+
+const provincias = [
+  {
+    id: '0',
+    value: 'Buenos Aires'
+  },
+  {
+    id: '1',
+    value: 'Córdoba'
+  },
+  {
+    id: '2',
+    value: 'Corrientes'
+  }
+];
+
 const ciudades = [
   {
     id: '0',
@@ -20,8 +53,13 @@ const ciudades = [
 ];
 
 export const Formulario = () => {
-  const [coordinates, setCoordinates] = useState(null);
+  const [ selectPais, setSelectPais ] = useState(paises[0].value);
+  const [ selectProvincia, setSelectProvincia ] = useState(provincias[0].value);
+  const [ selectCiudad, setSelectCiudad ] = useState(ciudades[0].value);
+  const [ coordinates, setCoordinates ] = useState(null);
   const [ coloresForm, setColoresForm ] = useState({
+    colorPais: 'primary',
+    colorProvincia: 'primary',
     colorCiudad: 'primary',
     colorCodigoPostal: 'primary',
     colorCalle:'primary',
@@ -35,14 +73,25 @@ export const Formulario = () => {
 
   async function handleSearch(event) {
     event.preventDefault();
-    const idCiudad = document.getElementById('ciudad').value;
     const codigoPostal = document.getElementById('codigoPostal').value;
     const calle = document.getElementById('calle').value;
     const altura = document.getElementById('altura').value;
-    const address = `${ calle }+${ altura },${ ciudades[idCiudad] },${ codigoPostal }`;
+    const address = `${ calle }+${ altura },${ selectCiudad },${ codigoPostal },${ selectProvincia },${ selectPais }`;
     const data = await endpointGetCoordinates(address);
     setCoordinates(data ? data.features[0].geometry.coordinates : null);
     console.log(data);
+  }
+
+  const handleSelectChangePais = (event) => {
+    setSelectPais(event.target.value);
+  }
+
+  const handleSelectChangeProvincia = (event) => {
+    setSelectProvincia(event.target.value);
+  }
+
+  const handleSelectChangeCiudad = (event) => {
+    setSelectCiudad(event.target.value);
   }
 
   return (
@@ -56,7 +105,9 @@ export const Formulario = () => {
         borderTop='0.3rem solid #1976D2'
       >
         <Typography variant='h5' color='primary' width='100%' paddingX={ 1 } paddingY={ 2 }>Dirección</Typography>
-        <SelectFormulario currencies={ ciudades } required={ true } label='Ciudad' id='ciudad' name='ciudad' autoComplete='off' color={ coloresForm.colorCiudad } xs={ 12 } md={ 8 } />
+        <SelectFormulario value={ selectPais } onChangeSelect={ handleSelectChangePais } currencies={ paises } required={ true } label='País' id='pais' name='pais' autoComplete='off' color={ coloresForm.colorPais } xs={ 12 } md={ 6 } />
+        <SelectFormulario value={ selectProvincia } onChangeSelect={ handleSelectChangeProvincia } currencies={ provincias } required={ true } label='Provincia' id='provincia' name='provincia' autoComplete='off' color={ coloresForm.colorProvincia } xs={ 12 } md={ 6 } />
+        <SelectFormulario value={ selectCiudad } onChangeSelect={ handleSelectChangeCiudad } currencies={ ciudades } required={ true } label='Ciudad' id='ciudad' name='ciudad' autoComplete='off' color={ coloresForm.colorCiudad } xs={ 12 } md={ 8 } />
         <InputFormulario required={ true } label='Código Postal' id='codigoPostal' name='codigoPostal' autoComplete='off' color={ coloresForm.colorCodigoPostal } xs={ 12 } md={ 4 } />
         <InputFormulario required={ true } label='Calle' id='calle' name='calle' autoComplete='off' color={ coloresForm.colorCalle } xs={ 12 } md={ 8 } />
         <InputFormulario required={ true } label='Altura' id='altura' name='altura' autoComplete='off' color={ coloresForm.colorAltura } xs={ 12 } md={ 4 } />

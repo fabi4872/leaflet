@@ -1,6 +1,6 @@
 import { Grid, MenuItem, TextField } from '@mui/material';
 
-export const SelectFormulario = ({ currencies, required, label, id, name, autoComplete, color, xs, md }) => {
+export const SelectFormulario = ({ value, onChangeSelect, currencies, required, label, id, name, autoComplete, color, xs, md }) => {
   return (
     <Grid
       item
@@ -18,6 +18,8 @@ export const SelectFormulario = ({ currencies, required, label, id, name, autoCo
         autoComplete={ autoComplete }
         color={ color }
         defaultValue={ currencies[0].value }
+        value={ value }
+        onChange={ onChangeSelect }
         fullWidth
       >
         {currencies.map((option) => (
