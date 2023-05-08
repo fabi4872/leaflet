@@ -6,7 +6,9 @@ import { endpointGetCoordinates } from '../endpoints';
 import { SelectFormulario } from './SelectFormulario';
 
 export const Formulario = ({ paises, provincias, ciudades }) => {
-  const [ coordinates, setCoordinates ] = useState(null);
+  const [ coordinatesCity, setCoordinatesCity ] = useState(ciudades[0].coordenadas);
+  const [ coordinatesDirection, setCoordinatesDirection ] = useState([]);
+  
   const { pais, provincia, ciudad, codigoPostal, calle, altura, calle1, calle2, piso, unidad, observaciones, onChangeForm } = useForm({
     pais: paises[0].value,
     provincia: provincias[0].value,
@@ -21,19 +23,31 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
     observaciones: ''
   });
 
-  async function handleSearch(event) {
-    event.preventDefault();
-    const address = `${ calle }+${ altura },${ ciudad },${ codigoPostal },${ provincia },${ pais }`;
-    const data = await endpointGetCoordinates(address);
-    setCoordinates(data ? data.features[0].geometry.coordinates : null);
-    console.log(data);
+  async function handleSearchDirection() {
+    if (pais != '' && provincia != '' && ciudad != '' && codigoPostal != '' && calle != '' && altura != '') {
+      const address = `${ calle }+${ altura },${ ciudad },${ codigoPostal },${ provincia },${ pais }`;
+      const data = await endpointGetCoordinates(address);   
+      console.log(`Las coordenadas de la ciudad son: ${ coordinatesCity }`);
+      console.log(`Las coordenadas de la dirección son: ${ coordinatesDirection }`);
+      if (data && data.features[0].properties.city == ciudad && data.features[0].properties.postcode == codigoPostal) {
+        setCoordinatesCity(data ? data.features[0].geometry.coordinates : coordinatesCity);
+        setCoordinatesDirection(data ? data.features[0].geometry.coordinates : coordinatesDirection);
+        console.log(data);
+      }
+      
+
+
+      
+    }
   }
 
   useEffect(() => {  
+    handleSearchDirection();
+
     return () => {
-      
+        
     }
-  }, []);
+  }, [ pais, provincia, ciudad, codigoPostal, calle, altura ]);
 
   return (
     <>
@@ -65,13 +79,12 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
           width='100%'
         >
           <Button 
-            variant='contained'
-            onClick={ handleSearch } 
+            variant='contained' 
             sx={{
               margin:'1.5rem'
             }}
           >
-            Enviar
+            Finalizar
           </Button>
         </Box>
       </Grid>

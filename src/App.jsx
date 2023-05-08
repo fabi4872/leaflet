@@ -36,15 +36,18 @@ const provincias = [
 const ciudades = [
   {
     id: '0',
-    value: 'Avellaneda'
+    value: 'Avellaneda',
+    coordenadas: [ -34.6625, -58.365 ]
   },
   {
     id: '1',
-    value: 'La Plata'
+    value: 'La Plata',
+    coordenadas: [ -34.92145, -57.95453 ] 
   },
   {
     id: '2',
-    value: 'Mar del Plata'
+    value: 'Mar del Plata',
+    coordenadas: [ -38.00042, -57.5562 ] 
   }
 ];
 
