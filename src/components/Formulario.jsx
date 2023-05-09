@@ -4,6 +4,7 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 import { InputFormulario } from './InputFormulario';
 import { endpointGetCoordinates } from '../endpoints';
 import { SelectFormulario } from './SelectFormulario';
+import { Mapa } from './Mapa';
 
 export const Formulario = ({ paises, provincias, ciudades }) => {
   const [ data, setData ] = useState(undefined);
@@ -97,6 +98,14 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
         <InputFormulario value={ unidad } onChangeForm={ onChangeForm } required={ false } label='Unidad' id='unidad' name='unidad' autoComplete='off' color='primary' xs={ 12 } md={ 3 } />
         <InputFormulario value={ observaciones } onChangeForm={ onChangeForm } required={ false } label='Observaciones' id='observaciones' name='observaciones' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
         
+        <Box
+          sx={{  
+            paddingY: '1rem'
+          }}
+        >
+          <Mapa />
+        </Box>
+
         <Box
           display='flex'
           justifyContent='center'
