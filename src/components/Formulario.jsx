@@ -9,7 +9,7 @@ import { Mapa } from './Mapa';
 export const Formulario = ({ paises, provincias, ciudades }) => {
   const [ data, setData ] = useState(undefined);
   const [ coordinatesCity, setCoordinatesCity ] = useState([ciudades[0].lat, ciudades[0].lng]);
-  const [ coordinatesDirection, setCoordinatesDirection ] = useState([]);
+  const [ coordinatesDirection, setCoordinatesDirection ] = useState(undefined);
   
   const { pais, provincia, ciudad, codigoPostal, calle, altura, calle1, calle2, piso, unidad, observaciones, onChangeForm } = useForm({
     pais: paises[0].value,
@@ -44,12 +44,12 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
       }
       else {
         setCoordinatesCity(coordinatesCityResult);
-        setCoordinatesDirection([]);
+        setCoordinatesDirection(undefined);
       }   
     }
     else {
       setCoordinatesCity(coordinatesCityResult);
-      setCoordinatesDirection([]);
+      setCoordinatesDirection(undefined);
     }
   }
 
@@ -84,6 +84,9 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
         width={ 500 }
         boxShadow='0 0.5rem 0.5rem 0 #CCCCCC'
         borderTop='0.3rem solid #1976D2'
+        sx={{
+          marginY: '2rem'
+        }}
       >
         <Typography variant='h5' color='primary' width='100%' paddingX={ 1 } paddingY={ 2 }>Dirección</Typography>
         <SelectFormulario value={ pais } onChangeForm={ onChangeForm } currencies={ paises } required={ true } label='País' id='pais' name='pais' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
@@ -100,10 +103,11 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
         
         <Box
           sx={{  
-            paddingY: '1rem'
+            paddingTop: '1.2rem',
+            paddingBottom: '.8rem'
           }}
         >
-          <Mapa />
+          <Mapa coordinatesCenter={ coordinatesCity } />
         </Box>
 
         <Box
