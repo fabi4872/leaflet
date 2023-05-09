@@ -6,7 +6,8 @@ import { endpointGetCoordinates } from '../endpoints';
 import { SelectFormulario } from './SelectFormulario';
 
 export const Formulario = ({ paises, provincias, ciudades }) => {
-  const [ coordinatesCity, setCoordinatesCity ] = useState(ciudades[0].coordenadas);
+  const [ data, setData ] = useState(undefined);
+  const [ coordinatesCity, setCoordinatesCity ] = useState([ciudades[0].lat, ciudades[0].lng]);
   const [ coordinatesDirection, setCoordinatesDirection ] = useState([]);
   
   const { pais, provincia, ciudad, codigoPostal, calle, altura, calle1, calle2, piso, unidad, observaciones, onChangeForm } = useForm({
@@ -24,30 +25,54 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
   });
 
   async function handleSearchDirection() {
-    if (pais != '' && provincia != '' && ciudad != '' && codigoPostal != '' && calle != '' && altura != '') {
-      const address = `${ calle }+${ altura },${ ciudad },${ codigoPostal },${ provincia },${ pais }`;
-      const data = await endpointGetCoordinates(address);   
-      console.log(`Las coordenadas de la ciudad son: ${ coordinatesCity }`);
-      console.log(`Las coordenadas de la dirección son: ${ coordinatesDirection }`);
-      if (data && data.features[0].properties.city == ciudad && data.features[0].properties.postcode == codigoPostal) {
-        setCoordinatesCity(data ? data.features[0].geometry.coordinates : coordinatesCity);
-        setCoordinatesDirection(data ? data.features[0].geometry.coordinates : coordinatesDirection);
-        console.log(data);
+    if (pais !== '' && provincia !== '' && ciudad !== '' && codigoPostal !== '' && calle !== '' && altura !== '') {
+      const address = `${ calle } ${ altura },${ ciudad },${ codigoPostal },${ provincia },${ pais }`;
+      setData(await endpointGetCoordinates(address));
+    }
+  }
+
+  const handleData = () => {    
+    const paisResult = ciudades.find(({ value }) => value === ciudad);
+    const coordinatesCityResult = [paisResult.lat, paisResult.lng];
+
+    if (data != undefined) {
+      const resultWithFilter = data.features.filter(item => item.properties.postcode === codigoPostal && item.properties.housenumber === altura);
+      if (resultWithFilter.length > 0) {
+        setCoordinatesCity(resultWithFilter[0].geometry.coordinates);
+        setCoordinatesDirection(resultWithFilter[0].geometry.coordinates);
       }
-      
-
-
-      
+      else {
+        setCoordinatesCity(coordinatesCityResult);
+        setCoordinatesDirection([]);
+      }   
+    }
+    else {
+      setCoordinatesCity(coordinatesCityResult);
+      setCoordinatesDirection([]);
     }
   }
 
   useEffect(() => {  
     handleSearchDirection();
-
     return () => {
         
     }
   }, [ pais, provincia, ciudad, codigoPostal, calle, altura ]);
+
+  useEffect(() => {
+    handleData();
+    return () => {
+        
+    }
+  }, [ data ]);
+
+  useEffect(() => {
+    console.log(`Las coordenadas de la ciudad son: ${ coordinatesCity }`);
+    console.log(`Las coordenadas de la dirección son: ${ coordinatesDirection }`);
+    return () => {
+        
+    }
+  }, [ coordinatesCity ]);
 
   return (
     <>
