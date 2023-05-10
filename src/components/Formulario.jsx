@@ -34,7 +34,7 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
 
   const handleData = () => {    
     const paisResult = ciudades.find(({ value }) => value === ciudad);
-    const coordinatesCityResult = [paisResult.lat, paisResult.lng];
+    const coordinatesCityResult = [paisResult.lng, paisResult.lat];
 
     if (data != undefined) {
       const resultWithFilter = data.features.filter(item => item.properties.postcode === codigoPostal && item.properties.housenumber === altura);
