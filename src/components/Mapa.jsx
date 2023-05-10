@@ -22,7 +22,7 @@ const Marcador = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity, s
       <Marker 
         position={[coordinatesCity[1], coordinatesCity[0]]}
         draggable={ true } 
-        onDragEnd={ handleDragEnd }
+        eventHandlers={{ dragend: handleDragEnd }}
       >
         <Popup>
           Coordenadas: {coordinatesCity[1]}, {coordinatesCity[0]}

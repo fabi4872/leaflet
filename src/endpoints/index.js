@@ -1,1 +1,1 @@
-export * from './endpointGetCoordinates';
+export * from './endpointsMap';

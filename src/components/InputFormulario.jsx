@@ -1,19 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Grid, TextField } from '@mui/material';
 
-export const InputFormulario = ({ value, onChangeForm, required, label, id, name, autoComplete, color, xs, md, paddingBottom = 2 }) => {
-  const [ inputValue, setInputValue ] = useState('');
-
+export const InputFormulario = ({ value, onChangeForm = undefined, setChangeCPCalleAltura = undefined, required, label, id, name, autoComplete, color, xs, md, paddingBottom = 2 }) => {
   const onChange = ({ target }) => {
-    setInputValue( target.value );
-    onChangeForm( target );
+    if (onChangeForm != undefined) {
+      onChangeForm( target );
+    }
+    else { 
+      setChangeCPCalleAltura( target.value );
+    }
   }
 
   useEffect(() => {  
+    
     return () => {
       
     }
-  }, [ inputValue ]);
+  }, [  ]);
 
   return (
     <Grid

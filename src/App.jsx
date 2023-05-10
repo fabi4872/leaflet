@@ -5,16 +5,6 @@ const paises = [
     id: '0',
     codigoPais: 'AR',
     value: 'Argentina'
-  },
-  {
-    id: '1',
-    codigoPais: 'BR',
-    value: 'Brasil'
-  },
-  {
-    id: '2',
-    codigoPais: 'CO',
-    value: 'Colombia'
   }
 ];
 
