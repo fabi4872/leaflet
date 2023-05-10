@@ -6,7 +6,7 @@ export const Mapa = ({ coordinatesCenter }) => {
     <MapContainer 
       center={ coordinatesCenter } 
       zoom={ 13 } 
-      style={{ width: '29.3rem', height: '29.3rem' }} 
+      style={{ width: '32rem', height: '32rem' }} 
       className='leaflet-container'
       throttleInterval={ 50 }
     >

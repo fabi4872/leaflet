@@ -99,17 +99,10 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
         <InputFormulario value={ calle2 } onChangeForm={ onChangeForm } required={ false } label='Calle 2' id='calle2' name='calle2' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
         <InputFormulario value={ piso } onChangeForm={ onChangeForm } required={ false } label='Piso' id='piso' name='piso' autoComplete='off' color='primary' xs={ 12 } md={ 3 } />
         <InputFormulario value={ unidad } onChangeForm={ onChangeForm } required={ false } label='Unidad' id='unidad' name='unidad' autoComplete='off' color='primary' xs={ 12 } md={ 3 } />
-        <InputFormulario value={ observaciones } onChangeForm={ onChangeForm } required={ false } label='Observaciones' id='observaciones' name='observaciones' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
+        <InputFormulario value={ observaciones } onChangeForm={ onChangeForm } required={ false } label='Observaciones' id='observaciones' name='observaciones' autoComplete='off' color='primary' xs={ 12 } md={ 6 } paddingBottom={ 4 } />
         
-        <Box
-          sx={{  
-            paddingTop: '1.2rem',
-            paddingBottom: '.8rem'
-          }}
-        >
-          <Mapa coordinatesCenter={ coordinatesCity } />
-        </Box>
-
+        <Mapa coordinatesCenter={ coordinatesCity } />
+        
         <Box
           display='flex'
           justifyContent='center'
@@ -119,7 +112,7 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
           <Button 
             variant='contained' 
             sx={{
-              margin:'1.5rem'
+              margin:'2rem 0 1rem 0'
             }}
           >
             Finalizar
