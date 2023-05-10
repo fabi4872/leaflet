@@ -2,27 +2,43 @@ import { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 
-const Marcador = ({ coordinatesCenter }) => {
+const Marcador = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity, setCoordinatesDirection }) => {
   const map = useMap();
   
   useEffect(() => {
-    const latLng = L.latLng(coordinatesCenter[1], coordinatesCenter[0]);
+    const latLng = L.latLng(coordinatesCity[1], coordinatesCity[0]);
     map.setView(latLng);
-  }, [ coordinatesCenter, map ]);
+  }, [ coordinatesCity, map ]);
+
+  const handleDragEnd = (event) => {
+    const marker = event.target;
+    const position = marker.getLatLng();
+    setCoordinatesCity([position.lng, position.lat]);
+    setCoordinatesDirection([position.lng, position.lat]);
+  };
  
-  return (
-    <Marker position={[coordinatesCenter[1], coordinatesCenter[0]]}>
-      <Popup>
-        Coordenadas: {coordinatesCenter[1]}, {coordinatesCenter[0]}
-      </Popup>
-    </Marker>
-  );
+  if (coordinatesDirection !== undefined) {
+    return (
+      <Marker 
+        position={[coordinatesCity[1], coordinatesCity[0]]}
+        draggable={ true } 
+        onDragEnd={ handleDragEnd }
+      >
+        <Popup>
+          Coordenadas: {coordinatesCity[1]}, {coordinatesCity[0]}
+        </Popup>
+      </Marker>
+    );
+  }
+  else {
+    return null;
+  }
 };
 
-export const Mapa = ({ coordinatesCenter }) => {
+export const Mapa = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity, setCoordinatesDirection }) => {
   return (
     <MapContainer 
-      center={ coordinatesCenter } 
+      center={ coordinatesCity } 
       zoom={ 13 } 
       style={{ width: '32rem', height: '32rem' }} 
       className='leaflet-container'
@@ -30,7 +46,11 @@ export const Mapa = ({ coordinatesCenter }) => {
     >
       <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
       
-      <Marcador coordinatesCenter={ coordinatesCenter } />
+      <Marcador 
+        coordinatesCity={ coordinatesCity }
+        coordinatesDirection={ coordinatesDirection }  
+        setCoordinatesCity={ setCoordinatesCity } 
+        setCoordinatesDirection={ setCoordinatesDirection } />
     </MapContainer>
   );
 };

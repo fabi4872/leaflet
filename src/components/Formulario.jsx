@@ -103,7 +103,11 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
         <InputFormulario value={ unidad } onChangeForm={ onChangeForm } required={ false } label='Unidad' id='unidad' name='unidad' autoComplete='off' color='primary' xs={ 12 } md={ 3 } />
         <InputFormulario value={ observaciones } onChangeForm={ onChangeForm } required={ false } label='Observaciones' id='observaciones' name='observaciones' autoComplete='off' color='primary' xs={ 12 } md={ 6 } paddingBottom={ 4 } />
         
-        <Mapa coordinatesCenter={ coordinatesCity } />
+        <Mapa 
+          coordinatesCity={ coordinatesCity } 
+          coordinatesDirection={ coordinatesDirection } 
+          setCoordinatesCity={ setCoordinatesCity } 
+          setCoordinatesDirection={ setCoordinatesDirection } />
         
         <Box
           display='flex'
