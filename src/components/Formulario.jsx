@@ -68,8 +68,8 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
   }, [ data ]);
 
   useEffect(() => {
-    console.log(`Las coordenadas de la ciudad son: ${ coordinatesCity }`);
-    console.log(`Las coordenadas de la dirección son: ${ coordinatesDirection }`);
+    //console.log(`Las coordenadas de la ciudad son: ${ coordinatesCity }`);
+    //console.log(`Las coordenadas de la dirección son: ${ coordinatesDirection }`);
     return () => {
         
     }
@@ -82,13 +82,15 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
         direction='row'
         padding={ 2 }
         width={ 500 }
+        paddingTop={ 1 }
         boxShadow='0 0.5rem 0.5rem 0 #CCCCCC'
         borderTop='0.3rem solid #1976D2'
         sx={{
           marginY: '2rem'
         }}
       >
-        <Typography variant='h5' color='primary' width='100%' paddingX={ 1 } paddingY={ 2 }>Dirección</Typography>
+        <Typography variant='h5' color='primary' width='100%' paddingX={ 1 } paddingY={ 3 }>Dirección</Typography>
+        
         <SelectFormulario value={ pais } onChangeForm={ onChangeForm } currencies={ paises } required={ true } label='País' id='pais' name='pais' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
         <SelectFormulario value={ provincia } onChangeForm={ onChangeForm } currencies={ provincias } required={ true } label='Provincia' id='provincia' name='provincia' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
         <SelectFormulario value={ ciudad } onChangeForm={ onChangeForm } currencies={ ciudades } required={ true } label='Ciudad' id='ciudad' name='ciudad' autoComplete='off' color='primary' xs={ 12 } md={ 8 } />

@@ -2,18 +2,18 @@ import { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 
-const Marcador = ({ coordinates }) => {
+const Marcador = ({ coordinatesCenter }) => {
   const map = useMap();
   
   useEffect(() => {
-    const latLng = L.latLng(coordinates[1], coordinates[0]);
+    const latLng = L.latLng(coordinatesCenter[1], coordinatesCenter[0]);
     map.setView(latLng);
-  }, [coordinates, map]);
+  }, [ coordinatesCenter, map ]);
  
   return (
-    <Marker position={[coordinates[1], coordinates[0]]}>
+    <Marker position={[coordinatesCenter[1], coordinatesCenter[0]]}>
       <Popup>
-        Coordenadas: {coordinates[1]}, {coordinates[0]}
+        Coordenadas: {coordinatesCenter[1]}, {coordinatesCenter[0]}
       </Popup>
     </Marker>
   );
@@ -29,7 +29,8 @@ export const Mapa = ({ coordinatesCenter }) => {
       throttleInterval={ 50 }
     >
       <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
-      <Marcador coordinates={coordinatesCenter} />
+      
+      <Marcador coordinatesCenter={ coordinatesCenter } />
     </MapContainer>
   );
 };
