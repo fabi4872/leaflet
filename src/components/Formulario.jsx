@@ -27,8 +27,13 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
   });
 
   async function handleSearchDirection() {
-    if (pais !== '' && provincia !== '' && ciudad !== '' && codigoPostal !== '' && calle !== '' && altura !== '') {
-      const address = `${ calle } ${ altura },${ ciudad },${ codigoPostal },${ provincia },${ pais }`;
+    if (pais.trim() !== '' && provincia.trim() !== '' && ciudad.trim() !== '' && codigoPostal.trim() !== '' && calle.trim() !== '' && altura.trim() !== '') {
+      const address = `${ calle.trim() } ${ altura.trim() },${ ciudad.trim() },${ codigoPostal.trim() },${ provincia.trim() },${ pais.trim() }`;
+      const newData = await endpointGetDirectionByData(address);
+      setData(newData);
+    }
+    else {
+      const address = `0 0,L,0,L,L`;
       const newData = await endpointGetDirectionByData(address);
       setData(newData);
     }
@@ -36,10 +41,10 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
 
   async function handleSearchDirectionByCoordinates() {
     if (coordinatesDirection !== undefined) {
-      const data2 = await endpointGetDirectionByCoordinates(coordinatesDirection[1], coordinatesDirection[0]);
+      const dataDirectionWithCoordinates = await endpointGetDirectionByCoordinates(coordinatesDirection[1], coordinatesDirection[0]);
       
-      if (data2 !== undefined) {        
-        const { properties } = data2.features[0];
+      if (dataDirectionWithCoordinates !== undefined) {        
+        const { properties } = dataDirectionWithCoordinates.features[0];
         
         if (properties.postcode === undefined || properties.street === undefined || properties.housenumber === undefined) {
           onChangeFormMultiple({
@@ -54,7 +59,7 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
             piso,
             unidad,
             observaciones
-          })
+          });
         }
         else {
           onChangeFormMultiple({
@@ -69,29 +74,26 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
             piso,
             unidad,
             observaciones
-          })
+          });
         }
       }
     }
   }
 
   async function handleData() {   
-    const paisResult = ciudades.find(({ value }) => value === ciudad);
+    const paisResult = ciudades.find(({ value }) => value == ciudad);
     const coordinatesCityResult = [paisResult.lng, paisResult.lat];
-
-    if (data !== undefined && onBlurDirection) {
-      const resultWithFilter = data.features.filter(item => item.properties.postcode !== undefined && item.properties.housenumber !== undefined && item.properties.postcode === codigoPostal && item.properties.housenumber === altura);
-      if (resultWithFilter.length > 0) {
-        const { geometry, properties } = resultWithFilter[0];
-
-        if (properties.postcode === undefined || properties.street === undefined || properties.housenumber === undefined) {
-          setCoordinatesCity(coordinatesCityResult);
-          setCoordinatesDirection(undefined);
-        }
-        else {
-          setCoordinatesCity(geometry.coordinates);
-          setCoordinatesDirection(geometry.coordinates);
-        } 
+        
+    if (data !== undefined && onBlurDirection) {      
+      const result = data.features.find(({ properties }) => {
+        return properties && 'postcode' in properties && properties.postcode == codigoPostal.trim() &&
+          'housenumber' in properties && properties.housenumber == altura.trim() &&
+          'street' in properties && properties.street !== undefined;
+      });
+      if (result !== undefined) {
+        const { geometry } = result;
+        setCoordinatesCity(geometry.coordinates);
+        setCoordinatesDirection(geometry.coordinates); 
       }
       else {
         setCoordinatesCity(coordinatesCityResult);
@@ -124,6 +126,12 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
         
     }
   }, [ onBlurDirection ]);
+
+  useEffect(() => {
+    return () => {
+        
+    }
+  }, [ data ]);
 
   return (
     <>
