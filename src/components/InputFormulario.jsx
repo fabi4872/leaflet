@@ -1,22 +1,23 @@
 import { useEffect } from 'react';
 import { Grid, TextField } from '@mui/material';
 
-export const InputFormulario = ({ value, onChangeForm = undefined, setChangeCPCalleAltura = undefined, required, label, id, name, autoComplete, color, xs, md, paddingBottom = 2 }) => {
+export const InputFormulario = ({ value, onChangeForm, setData = undefined, required, label, id, name, autoComplete, color, xs, md, paddingBottom = 2 }) => {
   const onChange = ({ target }) => {
-    if (onChangeForm != undefined) {
-      onChangeForm( target );
-    }
-    else { 
-      setChangeCPCalleAltura( target.value );
+    onChangeForm( target );
+  }
+
+  const onFocus = (event) => {
+    event.target.value = '';
+    if (setData != undefined) {
+      onChangeForm(event.target);
     }
   }
 
   useEffect(() => {  
-    
     return () => {
       
     }
-  }, [  ]);
+  }, []);
 
   return (
     <Grid
@@ -36,6 +37,7 @@ export const InputFormulario = ({ value, onChangeForm = undefined, setChangeCPCa
         color={ color }
         value={ value }
         onChange={ onChange }
+        onFocus={ onFocus }
         fullWidth
       />
     </Grid>

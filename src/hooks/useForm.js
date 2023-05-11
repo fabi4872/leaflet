@@ -10,8 +10,15 @@ export const useForm = ( initialForm = {} ) => {
     });
   }
 
+  const onChangeFormMultiple = (form) => {
+    setForm({
+      ...form
+    });
+  }
+
   return {
     ...form,
-    onChangeForm
+    onChangeForm,
+    onChangeFormMultiple
   }
 }
