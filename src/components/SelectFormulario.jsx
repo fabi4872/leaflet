@@ -1,11 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Grid, MenuItem, TextField } from '@mui/material';
 
 export const SelectFormulario = ({ value, onChangeForm, currencies, required, label, id, name, autoComplete, color, xs, md }) => {
-  const [ inputValue, setInputValue ] = useState('');
-
   const onChange = ({ target }) => {
-    setInputValue( target.value );
     onChangeForm( target );
   }
 
@@ -13,7 +10,7 @@ export const SelectFormulario = ({ value, onChangeForm, currencies, required, la
     return () => {
       
     }
-  }, [ inputValue ]);
+  }, []);
 
   return (
     <Grid

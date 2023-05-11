@@ -8,7 +8,8 @@ import { Mapa } from './Mapa';
 
 export const Formulario = ({ paises, provincias, ciudades }) => {
   const [ data, setData ] = useState(undefined);
-  const [ coordinatesCity, setCoordinatesCity ] = useState([ciudades[0].lat, ciudades[0].lng]);
+  const [ onBlurDirection, setOnBlurDirection ] = useState(true);
+  const [ coordinatesCity, setCoordinatesCity ] = useState([ciudades[0].lng, ciudades[0].lat]);
   const [ coordinatesDirection, setCoordinatesDirection ] = useState(undefined);
     
   const { pais, provincia, ciudad, codigoPostal, calle, altura, calle1, calle2, piso, unidad, observaciones, onChangeForm, onChangeFormMultiple } = useForm({
@@ -28,7 +29,8 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
   async function handleSearchDirection() {
     if (pais !== '' && provincia !== '' && ciudad !== '' && codigoPostal !== '' && calle !== '' && altura !== '') {
       const address = `${ calle } ${ altura },${ ciudad },${ codigoPostal },${ provincia },${ pais }`;
-      setData(await endpointGetDirectionByData(address));
+      const newData = await endpointGetDirectionByData(address);
+      setData(newData);
     }
   }
 
@@ -36,10 +38,10 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
     if (coordinatesDirection !== undefined) {
       const data2 = await endpointGetDirectionByCoordinates(coordinatesDirection[1], coordinatesDirection[0]);
       
-      if (data2 != undefined) {        
+      if (data2 !== undefined) {        
         const { properties } = data2.features[0];
         
-        if (properties.postcode == undefined || properties.street == undefined || properties.housenumber == undefined) {
+        if (properties.postcode === undefined || properties.street === undefined || properties.housenumber === undefined) {
           onChangeFormMultiple({
             pais,
             provincia,
@@ -73,15 +75,23 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
     }
   }
 
-  const handleData = () => {   
+  async function handleData() {   
     const paisResult = ciudades.find(({ value }) => value === ciudad);
     const coordinatesCityResult = [paisResult.lng, paisResult.lat];
 
-    if (data != undefined) {
-      const resultWithFilter = data.features.filter(item => item.properties.postcode === codigoPostal && item.properties.housenumber === altura);
+    if (data !== undefined && onBlurDirection) {
+      const resultWithFilter = data.features.filter(item => item.properties.postcode !== undefined && item.properties.housenumber !== undefined && item.properties.postcode === codigoPostal && item.properties.housenumber === altura);
       if (resultWithFilter.length > 0) {
-        setCoordinatesCity(resultWithFilter[0].geometry.coordinates);
-        setCoordinatesDirection(resultWithFilter[0].geometry.coordinates);
+        const { geometry, properties } = resultWithFilter[0];
+
+        if (properties.postcode === undefined || properties.street === undefined || properties.housenumber === undefined) {
+          setCoordinatesCity(coordinatesCityResult);
+          setCoordinatesDirection(undefined);
+        }
+        else {
+          setCoordinatesCity(geometry.coordinates);
+          setCoordinatesDirection(geometry.coordinates);
+        } 
       }
       else {
         setCoordinatesCity(coordinatesCityResult);
@@ -102,18 +112,18 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
   }, [ codigoPostal, calle, altura ]);
 
   useEffect(() => {
-    handleData();
-    return () => {
-        
-    }
-  }, [ data ]);
-
-  useEffect(() => {
     handleSearchDirectionByCoordinates();
     return () => {
         
     }
   }, [ coordinatesCity ]);
+
+  useEffect(() => {
+    handleData();
+    return () => {
+        
+    }
+  }, [ onBlurDirection ]);
 
   return (
     <>
@@ -134,14 +144,14 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
         <SelectFormulario value={ pais } onChangeForm={ onChangeForm } currencies={ paises } required={ true } label='País' id='pais' name='pais' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
         <SelectFormulario value={ provincia } onChangeForm={ onChangeForm } currencies={ provincias } required={ true } label='Provincia' id='provincia' name='provincia' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
         <SelectFormulario value={ ciudad } onChangeForm={ onChangeForm } currencies={ ciudades } required={ true } label='Ciudad' id='ciudad' name='ciudad' autoComplete='off' color='primary' xs={ 12 } md={ 8 } />
-        <InputFormulario value={ codigoPostal } onChangeForm={ onChangeForm } setData={ setData } required={ true } label='Código Postal' id='codigoPostal' name='codigoPostal' autoComplete='off' color='primary' xs={ 12 } md={ 4 } />
-        <InputFormulario value={ calle } onChangeForm={ onChangeForm } setData={ setData } required={ true } label='Calle' id='calle' name='calle' autoComplete='off' color='primary' xs={ 12 } md={ 8 } />
-        <InputFormulario value={ altura } onChangeForm={ onChangeForm } setData={ setData } required={ true } label='Altura' id='altura' name='altura' autoComplete='off' color='primary' xs={ 12 } md={ 4 } />
-        <InputFormulario value={ calle1 } onChangeForm={ onChangeForm } required={ false } label='Calle 1' id='calle1' name='calle1' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
-        <InputFormulario value={ calle2 } onChangeForm={ onChangeForm } required={ false } label='Calle 2' id='calle2' name='calle2' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
-        <InputFormulario value={ piso } onChangeForm={ onChangeForm } required={ false } label='Piso' id='piso' name='piso' autoComplete='off' color='primary' xs={ 12 } md={ 3 } />
-        <InputFormulario value={ unidad } onChangeForm={ onChangeForm } required={ false } label='Unidad' id='unidad' name='unidad' autoComplete='off' color='primary' xs={ 12 } md={ 3 } />
-        <InputFormulario value={ observaciones } onChangeForm={ onChangeForm } required={ false } label='Observaciones' id='observaciones' name='observaciones' autoComplete='off' color='primary' xs={ 12 } md={ 6 } paddingBottom={ 4 } />
+        <InputFormulario value={ codigoPostal } onChangeForm={ onChangeForm } setOnBlurDirection={ setOnBlurDirection } required={ true } label='Código Postal' id='codigoPostal' name='codigoPostal' autoComplete='off' color='primary' xs={ 12 } md={ 4 } />
+        <InputFormulario value={ calle } onChangeForm={ onChangeForm } setOnBlurDirection={ setOnBlurDirection } required={ true } label='Calle' id='calle' name='calle' autoComplete='off' color='primary' xs={ 12 } md={ 8 } />
+        <InputFormulario value={ altura } onChangeForm={ onChangeForm } setOnBlurDirection={ setOnBlurDirection } required={ true } label='Altura' id='altura' name='altura' autoComplete='off' color='primary' xs={ 12 } md={ 4 } />
+        <InputFormulario value={ calle1 } onChangeForm={ onChangeForm } setOnBlurDirection={ setOnBlurDirection } required={ false } label='Calle 1' id='calle1' name='calle1' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
+        <InputFormulario value={ calle2 } onChangeForm={ onChangeForm } setOnBlurDirection={ setOnBlurDirection } required={ false } label='Calle 2' id='calle2' name='calle2' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
+        <InputFormulario value={ piso } onChangeForm={ onChangeForm } setOnBlurDirection={ setOnBlurDirection } required={ false } label='Piso' id='piso' name='piso' autoComplete='off' color='primary' xs={ 12 } md={ 3 } />
+        <InputFormulario value={ unidad } onChangeForm={ onChangeForm } setOnBlurDirection={ setOnBlurDirection } required={ false } label='Unidad' id='unidad' name='unidad' autoComplete='off' color='primary' xs={ 12 } md={ 3 } />
+        <InputFormulario value={ observaciones } onChangeForm={ onChangeForm } setOnBlurDirection={ setOnBlurDirection } required={ false } label='Observaciones' id='observaciones' name='observaciones' autoComplete='off' color='primary' xs={ 12 } md={ 6 } paddingBottom={ 4 } />
         
         <Mapa 
           coordinatesCity={ coordinatesCity } 
