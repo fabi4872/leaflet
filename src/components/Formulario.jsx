@@ -52,11 +52,11 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
             codigoPostal: '',
             calle: '',
             altura: '',
-            calle1,
-            calle2,
-            piso,
-            unidad,
-            observaciones
+            calle1: '',
+            calle2: '',
+            piso: '',
+            unidad: '',
+            observaciones: ''
           });
         }
         else {
@@ -79,8 +79,8 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
   }
 
   async function handleData() {   
-    const paisResult = ciudades.find(({ value }) => value == ciudad);
-    const coordinatesCityResult = [paisResult.lng, paisResult.lat];
+    const ciudadResult = ciudades.find(({ value }) => value == ciudad);
+    const coordinatesCityResult = [ciudadResult.lng, ciudadResult.lat];
         
     if (Object.keys(data).length != 0 && onBlurDirection) {    
       const result = data.features.find(({ properties }) => {
@@ -131,7 +131,6 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
   }, [ onBlurDirection ]);
 
   useEffect(() => {
-    console.log(data);
     return () => {
         
     }
@@ -153,9 +152,9 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
       >
         <Typography variant='h5' color='primary' width='100%' paddingX={ 1 } paddingY={ 3 }>Dirección</Typography>
         
-        <SelectFormulario value={ pais } onChangeForm={ onChangeForm } currencies={ paises } required={ true } label='País' id='pais' name='pais' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
-        <SelectFormulario value={ provincia } onChangeForm={ onChangeForm } currencies={ provincias } required={ true } label='Provincia' id='provincia' name='provincia' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
-        <SelectFormulario value={ ciudad } onChangeForm={ onChangeForm } currencies={ ciudades } required={ true } label='Ciudad' id='ciudad' name='ciudad' autoComplete='off' color='primary' xs={ 12 } md={ 8 } />
+        <SelectFormulario value={ pais } currencies={ paises } required={ true } label='País' id='pais' name='pais' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
+        <SelectFormulario value={ provincia } currencies={ provincias } required={ true } label='Provincia' id='provincia' name='provincia' autoComplete='off' color='primary' xs={ 12 } md={ 6 } />
+        <SelectFormulario value={ ciudad } setCoordinatesCity={ setCoordinatesCity } setCoordinatesDirection={ setCoordinatesDirection } onChangeFormMultiple={ onChangeFormMultiple } pais={ pais } provincia={ provincia } currencies={ ciudades } required={ true } label='Ciudad' id='ciudad' name='ciudad' autoComplete='off' color='primary' xs={ 12 } md={ 8 } />
         <InputFormulario value={ codigoPostal } onChangeForm={ onChangeForm } setOnBlurDirection={ setOnBlurDirection } required={ true } label='Código Postal' id='codigoPostal' name='codigoPostal' autoComplete='off' color='primary' xs={ 12 } md={ 4 } />
         <InputFormulario value={ calle } onChangeForm={ onChangeForm } setOnBlurDirection={ setOnBlurDirection } required={ true } label='Calle' id='calle' name='calle' autoComplete='off' color='primary' xs={ 12 } md={ 8 } />
         <InputFormulario value={ altura } onChangeForm={ onChangeForm } setOnBlurDirection={ setOnBlurDirection } required={ true } label='Altura' id='altura' name='altura' autoComplete='off' color='primary' xs={ 12 } md={ 4 } />

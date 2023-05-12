@@ -3,7 +3,6 @@ import { Formulario } from './components';
 const paises = [
   {
     id: '0',
-    codigoPais: 'AR',
     value: 'Argentina'
   }
 ];
@@ -12,14 +11,6 @@ const provincias = [
   {
     id: '0',
     value: 'Buenos Aires'
-  },
-  {
-    id: '1',
-    value: 'Córdoba'
-  },
-  {
-    id: '2',
-    value: 'Corrientes'
   }
 ];
 

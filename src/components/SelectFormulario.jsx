@@ -1,9 +1,30 @@
 import { useEffect } from 'react';
 import { Grid, MenuItem, TextField } from '@mui/material';
 
-export const SelectFormulario = ({ value, onChangeForm, currencies, required, label, id, name, autoComplete, color, xs, md }) => {
+export const SelectFormulario = ({ value, setCoordinatesCity = undefined, setCoordinatesDirection = undefined, onChangeFormMultiple = undefined, pais = undefined, provincia = undefined, currencies, required, label, id, name, autoComplete, color, xs, md }) => {
   const onChange = ({ target }) => {
-    onChangeForm( target );
+    if (onChangeFormMultiple) {
+      onChangeFormMultiple({
+        pais: ( pais != undefined ) ? pais : '',
+        provincia: ( provincia != undefined ) ? provincia : '',
+        ciudad: target.value,
+        codigoPostal: '',
+        calle: '',
+        altura: '',
+        calle1: '',
+        calle2: '',
+        piso: '',
+        unidad: '',
+        observaciones: ''
+      });
+
+      if (setCoordinatesCity != undefined && setCoordinatesDirection != undefined) {
+        const ciudadResult = currencies.find(({ value }) => value == target.value);
+        const coordinatesCityResult = [ciudadResult.lng, ciudadResult.lat];
+        setCoordinatesCity(coordinatesCityResult);
+        setCoordinatesDirection([]);
+      }
+    }
   }
 
   useEffect(() => {  
