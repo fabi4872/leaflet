@@ -94,7 +94,7 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
           'housenumber' in properties && properties.housenumber == altura.trim() &&
           'street' in properties && properties.street != undefined;
       });
-      console.log(result);
+      
       if (result != undefined) {
         const { geometry } = result;
         setCoordinatesCity(geometry.coordinates);
