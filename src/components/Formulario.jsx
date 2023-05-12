@@ -5,6 +5,7 @@ import { InputFormulario } from './InputFormulario';
 import { endpointGetDirectionByData, endpointGetDirectionByCoordinates } from '../endpoints';
 import { SelectFormulario } from './SelectFormulario';
 import { Mapa } from './Mapa';
+import stringSimilarity from 'string-similarity';
 
 const mapWidthHeightMobile = '25rem';
 const mapWidthHeightDesktop = '43rem';
