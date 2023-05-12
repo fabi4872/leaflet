@@ -35,12 +35,12 @@ const Marcador = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity, s
   }
 };
 
-export const Mapa = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity, setCoordinatesDirection }) => {
+export const Mapa = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity, setCoordinatesDirection, mapWidthHeight }) => {
   return (
     <MapContainer 
       center={ coordinatesCity } 
       zoom={ 13 } 
-      style={{ width: '43rem', height: '43rem' }} 
+      style={{ width: mapWidthHeight, height: mapWidthHeight }} 
       className='leaflet-container'
       throttleInterval={ 50 }
     >

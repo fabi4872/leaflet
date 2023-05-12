@@ -6,7 +6,13 @@ import { endpointGetDirectionByData, endpointGetDirectionByCoordinates } from '.
 import { SelectFormulario } from './SelectFormulario';
 import { Mapa } from './Mapa';
 
+const mapWidthHeightMobile = '25rem';
+const mapWidthHeightDesktop = '43rem';
+const widthFormMobile = 400;
+const widthFormDesktop = 700;
+
 export const Formulario = ({ paises, provincias, ciudades }) => {
+  const [ isMobileView, setIsMobileView ] = useState(false);
   const [ data, setData ] = useState({});
   const [ onBlurDirection, setOnBlurDirection ] = useState(true);
   const [ coordinatesCity, setCoordinatesCity ] = useState([ciudades[0].lng, ciudades[0].lat]);
@@ -88,6 +94,7 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
           'housenumber' in properties && properties.housenumber == altura.trim() &&
           'street' in properties && properties.street != undefined;
       });
+      console.log(result);
       if (result != undefined) {
         const { geometry } = result;
         setCoordinatesCity(geometry.coordinates);
@@ -136,13 +143,20 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
     }
   }, [ data ]);
 
+   useEffect(() => {
+    const handleResize = () => setIsMobileView(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <>
       <Grid
         container
         direction='row'
         padding={ 2 }
-        width={ 700 }
+        width={ ( isMobileView ) ? widthFormMobile : widthFormDesktop }
         paddingTop={ 1 }
         boxShadow='0 0.5rem 0.5rem 0 #CCCCCC'
         borderTop='0.3rem solid #1976D2'
@@ -168,7 +182,8 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
           coordinatesCity={ coordinatesCity } 
           coordinatesDirection={ coordinatesDirection } 
           setCoordinatesCity={ setCoordinatesCity } 
-          setCoordinatesDirection={ setCoordinatesDirection } />
+          setCoordinatesDirection={ setCoordinatesDirection } 
+          mapWidthHeight={ ( isMobileView ) ? mapWidthHeightMobile : mapWidthHeightDesktop } />
         
         <Box
           display='flex'
