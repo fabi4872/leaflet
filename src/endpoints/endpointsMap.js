@@ -9,7 +9,7 @@ export async function endpointGetDirectionByData(address) {
   } 
     catch (error) {
     console.error(error);
-    return undefined;
+    return null;
   }
 }
 
@@ -22,6 +22,6 @@ export async function endpointGetDirectionByCoordinates(lat, lng) {
   } 
     catch (error) {
     console.error(error);
-    return undefined;
+    return null;
   }
 }

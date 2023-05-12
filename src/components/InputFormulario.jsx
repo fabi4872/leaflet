@@ -3,11 +3,19 @@ import { Grid, TextField } from '@mui/material';
 
 export const InputFormulario = ({ value, onChangeForm, setOnBlurDirection, required, label, id, name, autoComplete, color, xs, md, paddingBottom = 2 }) => {
   const onChange = ({ target }) => {
+    if (target.name === 'codigoPostal' || target.name === 'calle' || target.name === 'altura') {
+      setOnBlurDirection(false);
+    }
+    else {
+      setOnBlurDirection(true);
+    }
     onChangeForm( target );
   }
 
   const onFocus = ({ target }) => {
     if (target.name === 'codigoPostal' || target.name === 'calle' || target.name === 'altura') {
+      target.value = '';
+      onChangeForm( target );
       setOnBlurDirection(false);
     }
     else {

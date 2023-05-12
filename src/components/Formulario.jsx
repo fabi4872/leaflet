@@ -7,10 +7,10 @@ import { SelectFormulario } from './SelectFormulario';
 import { Mapa } from './Mapa';
 
 export const Formulario = ({ paises, provincias, ciudades }) => {
-  const [ data, setData ] = useState(undefined);
+  const [ data, setData ] = useState({});
   const [ onBlurDirection, setOnBlurDirection ] = useState(true);
   const [ coordinatesCity, setCoordinatesCity ] = useState([ciudades[0].lng, ciudades[0].lat]);
-  const [ coordinatesDirection, setCoordinatesDirection ] = useState(undefined);
+  const [ coordinatesDirection, setCoordinatesDirection ] = useState([]);
     
   const { pais, provincia, ciudad, codigoPostal, calle, altura, calle1, calle2, piso, unidad, observaciones, onChangeForm, onChangeFormMultiple } = useForm({
     pais: paises[0].value,
@@ -27,26 +27,24 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
   });
 
   async function handleSearchDirection() {
-    if (pais.trim() !== '' && provincia.trim() !== '' && ciudad.trim() !== '' && codigoPostal.trim() !== '' && calle.trim() !== '' && altura.trim() !== '') {
-      const address = `${ calle.trim() } ${ altura.trim() },${ ciudad.trim() },${ codigoPostal.trim() },${ provincia.trim() },${ pais.trim() }`;
-      const newData = await endpointGetDirectionByData(address);
+    const address = `${ calle.trim() } ${ altura.trim() },${ ciudad.trim() },${ codigoPostal.trim() },${ provincia.trim() },${ pais.trim() }`;
+    const newData = await endpointGetDirectionByData(address);
+    if (newData != null) {
       setData(newData);
     }
     else {
-      const address = `0 0,L,0,L,L`;
-      const newData = await endpointGetDirectionByData(address);
-      setData(newData);
+      setData({});
     }
   }
 
   async function handleSearchDirectionByCoordinates() {
-    if (coordinatesDirection !== undefined) {
+    if (coordinatesDirection.length != 0) {
       const dataDirectionWithCoordinates = await endpointGetDirectionByCoordinates(coordinatesDirection[1], coordinatesDirection[0]);
       
-      if (dataDirectionWithCoordinates !== undefined) {        
+      if (dataDirectionWithCoordinates != null) {        
         const { properties } = dataDirectionWithCoordinates.features[0];
         
-        if (properties.postcode === undefined || properties.street === undefined || properties.housenumber === undefined) {
+        if (properties.postcode == undefined || properties.street == undefined || properties.housenumber == undefined) {
           onChangeFormMultiple({
             pais,
             provincia,
@@ -84,30 +82,35 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
     const paisResult = ciudades.find(({ value }) => value == ciudad);
     const coordinatesCityResult = [paisResult.lng, paisResult.lat];
         
-    if (data !== undefined && onBlurDirection) {      
+    if (Object.keys(data).length != 0 && onBlurDirection) {    
       const result = data.features.find(({ properties }) => {
         return properties && 'postcode' in properties && properties.postcode == codigoPostal.trim() &&
           'housenumber' in properties && properties.housenumber == altura.trim() &&
-          'street' in properties && properties.street !== undefined;
+          'street' in properties && properties.street != undefined;
       });
-      if (result !== undefined) {
+      if (result != undefined) {
         const { geometry } = result;
         setCoordinatesCity(geometry.coordinates);
         setCoordinatesDirection(geometry.coordinates); 
       }
       else {
         setCoordinatesCity(coordinatesCityResult);
-        setCoordinatesDirection(undefined);
+        setCoordinatesDirection([]);
       }   
     }
     else {
       setCoordinatesCity(coordinatesCityResult);
-      setCoordinatesDirection(undefined);
+      setCoordinatesDirection([]);
     }
   }
 
   useEffect(() => {  
-    handleSearchDirection();
+    if (pais.trim() != '' && provincia.trim() != '' && ciudad.trim() != '' && codigoPostal.trim() != '' && calle.trim() != '' && altura.trim() != '') {
+      handleSearchDirection();
+    }
+    else {
+      setData({});
+    }
     return () => {
         
     }
@@ -128,6 +131,7 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
   }, [ onBlurDirection ]);
 
   useEffect(() => {
+    console.log(data);
     return () => {
         
     }
