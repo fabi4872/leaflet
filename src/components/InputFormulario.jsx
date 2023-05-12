@@ -15,8 +15,8 @@ export const InputFormulario = ({ value, onChangeForm, setOnBlurDirection, requi
   const onFocus = ({ target }) => {
     if (target.name === 'codigoPostal' || target.name === 'calle' || target.name === 'altura') {
       target.value = '';
-      onChangeForm( target );
       setOnBlurDirection(false);
+      onChangeForm( target );
     }
     else {
       setOnBlurDirection(true);

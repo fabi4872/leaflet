@@ -26,10 +26,6 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
     observaciones: ''
   });
 
-  const handleClick = () => {
-    setOnBlurDirection(true);
-  };
-
   async function handleSearchDirection() {
     const address = `${ calle.trim() } ${ altura.trim() },${ ciudad.trim() },${ codigoPostal.trim() },${ provincia.trim() },${ pais.trim() }`;
     const newData = await endpointGetDirectionByData(address);
@@ -139,14 +135,6 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
         
     }
   }, [ data ]);
-
-  useEffect(() => {
-    document.body.addEventListener("click", handleClick);
-
-    return () => {
-      document.body.removeEventListener("click", handleClick);
-    };
-  }, []);
 
   return (
     <>
