@@ -146,7 +146,6 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
         paddingTop={ 1 }
         boxShadow='0 0.5rem 0.5rem 0 #CCCCCC'
         borderTop='0.3rem solid #1976D2'
-        onClick={ handleClick }
         sx={{
           marginY: '2rem'
         }}
