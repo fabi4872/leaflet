@@ -12,7 +12,7 @@ export const InputFormulario = ({ value, onChangeForm, setOnBlurDirection, requi
     onChangeForm( target );
   }
 
-  const onFocus = ({ target }) => {
+  const onClick = ({ target }) => {
     if (target.name === 'codigoPostal' || target.name === 'calle' || target.name === 'altura') {
       target.value = '';
       setOnBlurDirection(false);
@@ -47,7 +47,7 @@ export const InputFormulario = ({ value, onChangeForm, setOnBlurDirection, requi
         color={ color }
         value={ value }
         onChange={ onChange }
-        onFocus={ onFocus }
+        onClick={ onClick }
         fullWidth
       />
     </Grid>
