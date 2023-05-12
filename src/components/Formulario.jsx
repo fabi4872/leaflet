@@ -154,7 +154,7 @@ export const Formulario = ({ paises, provincias, ciudades }) => {
         container
         direction='row'
         padding={ 2 }
-        width={ 500 }
+        width={ 400 }
         paddingTop={ 1 }
         boxShadow='0 0.5rem 0.5rem 0 #CCCCCC'
         borderTop='0.3rem solid #1976D2'
