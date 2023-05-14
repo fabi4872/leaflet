@@ -23,12 +23,18 @@ const ciudades = [
   },
   {
     id: '1',
+    value: 'City Bell',
+    lat: -34.85889,
+    lng: -58.05417
+  },
+  {
+    id: '2',
     value: 'La Plata',
     lat: -34.92145,
     lng: -57.95453 
   },
   {
-    id: '2',
+    id: '3',
     value: 'Mar del Plata',
     lat: -38.00042,
     lng: -57.5562 

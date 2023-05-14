@@ -5,20 +5,19 @@ export const SelectFormulario = ({ value, setCoordinatesCity = undefined, setCoo
   const onChange = ({ target }) => {
     if (onChangeFormMultiple) {
       onChangeFormMultiple({
-        pais: ( pais != undefined ) ? pais : '',
-        provincia: ( provincia != undefined ) ? provincia : '',
+        pais: ( pais !== undefined ) ? pais : '',
+        provincia: ( provincia !== undefined ) ? provincia : '',
         ciudad: target.value,
         codigoPostal: '',
         calle: '',
         altura: '',
-        calle1: '',
-        calle2: '',
+        entreCalles: '',
         piso: '',
         unidad: '',
         observaciones: ''
       });
 
-      if (setCoordinatesCity != undefined && setCoordinatesDirection != undefined) {
+      if (setCoordinatesCity !== undefined && setCoordinatesDirection !== undefined) {
         const ciudadResult = currencies.find(({ value }) => value == target.value);
         const coordinatesCityResult = [ciudadResult.lng, ciudadResult.lat];
         setCoordinatesCity(coordinatesCityResult);

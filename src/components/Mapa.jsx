@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { Circle, MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 
 const Marcador = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity, setCoordinatesDirection }) => {
@@ -17,17 +17,29 @@ const Marcador = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity, s
     setCoordinatesDirection([position.lng, position.lat]);
   };
  
-  if (coordinatesDirection !== undefined) {
+  if (coordinatesDirection !== undefined) {    
+    const circleOptions = {
+      color: '#2880CA',
+      fillColor: '#2880CA',
+      fillOpacity: 0.2,
+    };
+
+    const circleRadius = 1000000 / 111320;
+
     return (
-      <Marker 
-        position={[coordinatesCity[1], coordinatesCity[0]]}
-        draggable={ true } 
-        eventHandlers={{ dragend: handleDragEnd }}
-      >
-        <Popup>
-          Coordenadas: {coordinatesCity[1]}, {coordinatesCity[0]}
-        </Popup>
-      </Marker>
+      <>
+        <Circle center={[coordinatesCity[1], coordinatesCity[0]]} radius={ circleRadius } pathOptions={ circleOptions } />
+        <Marker 
+          position={[coordinatesCity[1], coordinatesCity[0]]}
+          draggable={ true }
+          eventHandlers={{ dragend: handleDragEnd }}
+          doubleClickZoom={ false }
+        >
+          <Popup>
+            Coordenadas: {coordinatesCity[1]}, {coordinatesCity[0]}
+          </Popup>
+        </Marker>
+      </>
     );
   }
   else {
