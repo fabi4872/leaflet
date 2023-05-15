@@ -41,7 +41,7 @@ export const Mapa = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity
   return (
     <MapContainer 
       center={ coordinatesCity } 
-      zoom={ 13 } 
+      zoom={ 16 } 
       style={{ width: mapWidthHeight, height: mapWidthHeight }} 
       className='leaflet-container'
       throttleInterval={ 50 }
