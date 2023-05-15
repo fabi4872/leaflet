@@ -25,3 +25,16 @@ export async function endpointGetDirectionByCoordinates(lat, lng) {
     return null;
   }
 }
+
+export async function endpointGetDirectionByDataGeoref(address, provincia, ciudad) {
+  try {
+    const url = `https://apis.datos.gob.ar/georef/api/direcciones?direccion=${ address }&provincia=${ provincia }&localidad=${ ciudad }&campos=estandar`;
+    const response = await axios.get(url);
+    const data = response.data;
+    return data;
+  } 
+    catch (error) {
+    console.error(error);
+    return null;
+  }
+}

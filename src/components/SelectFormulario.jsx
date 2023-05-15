@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
 import { Grid, MenuItem, TextField } from '@mui/material';
 
-export const SelectFormulario = ({ value, setCoordinatesCity = undefined, setCoordinatesDirection = undefined, onChangeFormMultiple = undefined, pais = undefined, provincia = undefined, currencies, required, label, id, name, autoComplete, color, xs, md }) => {
+export const SelectFormulario = ({ value, setCoordinatesCity = undefined, setCoordinatesDirection = undefined, onChangeFormMultiple = undefined, provincia = undefined, currencies, required, label, id, name, autoComplete, color, xs, md }) => {
   const onChange = ({ target }) => {
     if (onChangeFormMultiple) {
       onChangeFormMultiple({
-        pais: ( pais !== undefined ) ? pais : '',
         provincia: ( provincia !== undefined ) ? provincia : '',
         ciudad: target.value,
         codigoPostal: '',
