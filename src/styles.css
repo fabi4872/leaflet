@@ -21,12 +21,3 @@
   margin-right: 10px;
   margin-bottom: 10px;
 }
-
-.direction-container {
-  opacity: 0 !important;
-  transition: opacity 0.5s ease-in-out !important;
-}
-
-.direction-container.show {
-  opacity: 1 !important;
-}

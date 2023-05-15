@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { Circle, MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 
-const Marcador = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity, setCoordinatesDirection }) => {
+const Marcador = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity, setCoordinatesDirection, isDraggable }) => {
   const map = useMap();
   
   useEffect(() => {
@@ -17,23 +17,13 @@ const Marcador = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity, s
     setCoordinatesDirection([position.lng, position.lat]);
   };
  
-  if (coordinatesDirection !== undefined) {    
-    const circleOptions = {
-      color: '#2880CA',
-      fillColor: '#2880CA',
-      fillOpacity: 0.2,
-    };
-
-    const circleRadius = 1000000 / 111320;
-
+  if (coordinatesDirection !== undefined) {
     return (
       <>
-        <Circle center={[coordinatesCity[1], coordinatesCity[0]]} radius={ circleRadius } pathOptions={ circleOptions } />
         <Marker 
           position={[coordinatesCity[1], coordinatesCity[0]]}
-          draggable={ true }
+          draggable={ isDraggable }
           eventHandlers={{ dragend: handleDragEnd }}
-          doubleClickZoom={ false }
         >
           <Popup>
             Coordenadas: {coordinatesCity[1]}, {coordinatesCity[0]}
@@ -47,7 +37,7 @@ const Marcador = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity, s
   }
 };
 
-export const Mapa = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity, setCoordinatesDirection, mapWidthHeight }) => {
+export const Mapa = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity, setCoordinatesDirection, mapWidthHeight, isDraggable }) => {
   return (
     <MapContainer 
       center={ coordinatesCity } 
@@ -62,7 +52,8 @@ export const Mapa = ({ coordinatesCity, coordinatesDirection, setCoordinatesCity
         coordinatesCity={ coordinatesCity }
         coordinatesDirection={ coordinatesDirection }  
         setCoordinatesCity={ setCoordinatesCity } 
-        setCoordinatesDirection={ setCoordinatesDirection } />
+        setCoordinatesDirection={ setCoordinatesDirection } 
+        isDraggable={ isDraggable }/>
     </MapContainer>
   );
 };

@@ -5,6 +5,8 @@ import { InputFormulario } from './InputFormulario';
 import { endpointGetDirectionByDataGeoref } from '../endpoints';
 import { SelectFormulario } from './SelectFormulario';
 import { Mapa } from './Mapa';
+import IconButton from '@mui/material/IconButton';
+import RoomOutlinedIcon from '@mui/icons-material/RoomOutlined';
 
 const mapWidthHeightMobile = '25rem';
 const mapWidthHeightDesktop = '43rem';
@@ -29,6 +31,25 @@ export const Formulario = ({ provincias, ciudades }) => {
     unidad: '',
     observaciones: ''
   });
+
+  const onReestablecer = () => {
+    onChangeFormMultiple({
+      provincia: provincias[0].value,
+      ciudad: ciudades[0].value,
+      codigoPostal: '',
+      calle: '',
+      altura: '',
+      entreCalles: '',
+      piso: '',
+      unidad: '',
+      observaciones: ''
+    });
+
+    setDataDirection([]);
+    setCoordinatesCity([ciudades[0].lng, ciudades[0].lat]);
+    setCoordinatesDirection([]);
+    setDirection({});
+  }
 
   async function onSearchDirection() {
     //Se setea dataDirection como colección vacía
@@ -78,32 +99,40 @@ export const Formulario = ({ provincias, ciudades }) => {
     }
   }
 
-  const onDirectionSelection = () => {
-    if (Object.keys(direction).length !== 0) {      
+  const onDirectionSelection = (id) => {
+    //Obtiene la dirección correspondiente y la setea
+    const selectedDirection = dataDirection.find((direccion) => direccion.id === id); 
+                
+    if (selectedDirection !== undefined) {
+      setDirection(selectedDirection);
+    }
+  }
+
+  //Actualiza el componente, por cambio de coordenadas de la dirección
+  useEffect(() => {
+    if (Object.keys(direction).length !== 0) {
       //Seteo de dirección actualizada
       onChangeFormMultiple({
-        provincia: direction.state,
-        ciudad: direction.city,
-        codigoPostal: altura,
-        calle: direction.street,
-        altura: direction.houseNumber,
+        provincia: direction.provincia,
+        ciudad: direction.ciudad,
+        codigoPostal,
+        calle: direction.calle,
+        altura: direction.altura,
         entreCalles,
         piso,
         unidad,
         observaciones
       });
 
-      setCoordinatesCity([direction.longitud, direction.latitud]);
-      setCoordinatesDirection([direction.longitud, direction.latitud]);
+      //Se setean las coordenadas para el mapa
+      setCoordinatesCity([direction.lon, direction.lat]);
+      setCoordinatesDirection([direction.lon, direction.lat]);
     }
-  }
-
-  //Actualiza el componente, por cambio de coordenadas de la dirección
-  useEffect(() => {
+    
     return () => {
         
     }
-  }, [ coordinatesDirection ]);
+  }, [ direction ]);
 
   //Monta el componente, detectando el ancho de pantalla adecuado para el dispositivo
   useEffect(() => {
@@ -127,7 +156,28 @@ export const Formulario = ({ provincias, ciudades }) => {
           marginY: '2rem'
         }}
       >
-        <Typography variant='h5' color='primary' width='100%' paddingX={ 1 } paddingY={ 3 }>Dirección</Typography>
+
+        <Box
+          display='flex'
+          justifyContent='space-beetwen'
+          alignItems='center'
+          width='100%'
+          sx={{
+            marginTop: '0.3rem'
+          }}
+        >
+          <Typography variant='h5' color='primary' width='100%' paddingX={ 1 } paddingY={ 3 }>Dirección</Typography>
+          <Button 
+            variant='contained'
+            color='warning' 
+            onClick={ onReestablecer }
+            sx={{
+              marginRight: '0.5rem'
+            }}
+          >
+            Limpiar
+          </Button>
+        </Box>
         
         <SelectFormulario value={ provincia } currencies={ provincias } required={ true } label='Provincia' id='provincia' name='provincia' autoComplete='off' color='primary' xs={ 12 } md={ 5 } />
         <SelectFormulario value={ ciudad } setCoordinatesCity={ setCoordinatesCity } setCoordinatesDirection={ setCoordinatesDirection } onChangeFormMultiple={ onChangeFormMultiple } provincia={ provincia } currencies={ ciudades } required={ true } label='Ciudad' id='ciudad' name='ciudad' autoComplete='off' color='primary' xs={ 12 } md={ 5 } />
@@ -136,7 +186,7 @@ export const Formulario = ({ provincias, ciudades }) => {
         <InputFormulario value={ altura } onChangeForm={ onChangeForm } required={ true } label='Altura' id='altura' name='altura' autoComplete='off' color='primary' xs={ 12 } md={ 4 } />
         
         {
-          ( dataDirection.length === 0 )
+          ( dataDirection.length == 0 )
           ?
           (
             <Box
@@ -161,7 +211,7 @@ export const Formulario = ({ provincias, ciudades }) => {
         }
         
         {
-          ( dataDirection.length > 0 )
+          ( dataDirection.length > 0 && Object.keys(direction).length === 0 )
           ? 
           (
             <Box
@@ -172,9 +222,23 @@ export const Formulario = ({ provincias, ciudades }) => {
               alignItems='flex-start'
               width='100%'
             >
+              <Typography variant='body1' color='#333333' sx={{ fontStyle: 'italic', marginLeft: '0.5rem', marginTop: '1rem', marginBottom: '0.5rem' }}>({ dataDirection.length }) Resultado(s) obtenido(s)</Typography>
+
               {
                 dataDirection.map((direccion) => (
-                  <Typography key={ direccion.id } variant='body2' color='primary'>{ direccion.nomenclatura }</Typography>
+                  <Box 
+                    key={ direccion.id } 
+                    display='flex'
+                    justifyContent='flex-start'
+                    alignItems='center'
+                    width='100%'
+                    sx={{ paddingX: '2rem' }}
+                  >
+                    <Typography variant='body2' color='primary'>{ direccion.nomenclatura }</Typography>
+                    <IconButton color="secondary" aria-label="seleccionar dirección" onClick={ () => onDirectionSelection(direccion.id) } sx={{ marginLeft: '0.5rem' }}>
+                      <RoomOutlinedIcon />
+                    </IconButton>
+                  </Box>
                 ))
               }
             </Box>
@@ -199,28 +263,29 @@ export const Formulario = ({ provincias, ciudades }) => {
                 setCoordinatesCity={ setCoordinatesCity } 
                 setCoordinatesDirection={ setCoordinatesDirection } 
                 mapWidthHeight={ ( isMobileView ) ? mapWidthHeightMobile : mapWidthHeightDesktop } 
+                isDraggable={ true }
               />
+
+              <Box
+                display='flex'
+                justifyContent='center'
+                alignItems='center'
+                width='100%'
+              >
+                <Button 
+                  variant='contained' 
+                  sx={{
+                    margin:'2rem 0 1rem 0'
+                  }}
+                >
+                  Finalizar
+                </Button>
+              </Box>
             </>
           )
           :
           null
         }
-        
-        <Box
-          display='flex'
-          justifyContent='center'
-          alignItems='center'
-          width='100%'
-        >
-          <Button 
-            variant='contained' 
-            sx={{
-              margin:'2rem 0 1rem 0'
-            }}
-          >
-            Finalizar
-          </Button>
-        </Box>
       </Grid>
     </>
   )

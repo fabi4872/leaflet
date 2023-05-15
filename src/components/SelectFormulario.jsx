@@ -3,11 +3,12 @@ import { Grid, MenuItem, TextField } from '@mui/material';
 
 export const SelectFormulario = ({ value, setCoordinatesCity = undefined, setCoordinatesDirection = undefined, onChangeFormMultiple = undefined, provincia = undefined, currencies, required, label, id, name, autoComplete, color, xs, md }) => {
   const onChange = ({ target }) => {
+    const city = currencies.find(({ value }) => value == target.value);
     if (onChangeFormMultiple) {
       onChangeFormMultiple({
         provincia: ( provincia !== undefined ) ? provincia : '',
         ciudad: target.value,
-        codigoPostal: '',
+        codigoPostal: ( city !== undefined ) ? city.postcode : '',
         calle: '',
         altura: '',
         entreCalles: '',
