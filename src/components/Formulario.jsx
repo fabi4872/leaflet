@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useForm } from '../hooks';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Link, Typography } from '@mui/material';
 import { InputFormulario } from './InputFormulario';
 import { endpointGetDirectionByDataGeoref } from '../endpoints';
 import { SelectFormulario } from './SelectFormulario';
@@ -23,7 +23,7 @@ export const Formulario = ({ provincias, ciudades }) => {
   const { provincia, ciudad, codigoPostal, calle, altura, entreCalles, piso, unidad, observaciones, onChangeForm, onChangeFormMultiple } = useForm({
     provincia: provincias[0].value,
     ciudad: ciudades[0].value,
-    codigoPostal: '',
+    codigoPostal: ciudades[0].postcode,
     calle: '',
     altura: '',
     entreCalles: '',
@@ -36,7 +36,7 @@ export const Formulario = ({ provincias, ciudades }) => {
     onChangeFormMultiple({
       provincia: provincias[0].value,
       ciudad: ciudades[0].value,
-      codigoPostal: '',
+      codigoPostal: ciudades[0].postcode,
       calle: '',
       altura: '',
       entreCalles: '',
@@ -159,24 +159,27 @@ export const Formulario = ({ provincias, ciudades }) => {
 
         <Box
           display='flex'
-          justifyContent='space-beetwen'
+          justifyContent='space-between'
           alignItems='center'
           width='100%'
           sx={{
             marginTop: '0.3rem'
           }}
         >
-          <Typography variant='h5' color='primary' width='100%' paddingX={ 1 } paddingY={ 3 }>Dirección</Typography>
-          <Button 
-            variant='contained'
-            color='warning' 
-            onClick={ onReestablecer }
-            sx={{
-              marginRight: '0.5rem'
-            }}
-          >
-            Limpiar
-          </Button>
+          <Typography variant='h5' color='primary' paddingX={ 1 } paddingY={ 3 }>Dirección</Typography>
+          
+          <Box>
+            <Button 
+              variant='contained'
+              color='warning' 
+              onClick={ onReestablecer }
+              sx={{
+                marginRight: '0.5rem'
+              }}
+            >
+              Limpiar
+            </Button>
+          </Box>
         </Box>
         
         <SelectFormulario value={ provincia } currencies={ provincias } required={ true } label='Provincia' id='provincia' name='provincia' autoComplete='off' color='primary' xs={ 12 } md={ 5 } />
@@ -189,22 +192,32 @@ export const Formulario = ({ provincias, ciudades }) => {
           ( dataDirection.length == 0 )
           ?
           (
-            <Box
-              display='flex'
-              justifyContent='center'
-              alignItems='center'
-              width='100%'
-            >
-              <Button 
-                variant='contained' 
-                onClick={ onSearchDirection }
+            <>
+              <Box
+                display='flex'
+                justifyContent='center'
+                alignItems='center'
+                width='100%'
                 sx={{
-                  margin:'2rem 0 1rem 0'
+                  
                 }}
               >
-                Buscar dirección
-              </Button>
-            </Box>
+                <Button 
+                  variant='contained' 
+                  onClick={ onSearchDirection }
+                  color='primary'
+                  sx={{
+                    margin: '1.5rem 0 1rem 0'
+                  }}
+                >
+                  Buscar dirección
+                </Button>
+              </Box>
+              
+              <Link href='#' underline='none' width='100%' sx={{ margin: '1rem 0.5rem 1rem 0' }}>
+                <Typography align='right' variant='body2'>Cargar dirección desde el mapa</Typography>
+              </Link>
+            </>
           )
           :
           null
@@ -232,7 +245,7 @@ export const Formulario = ({ provincias, ciudades }) => {
                     justifyContent='flex-start'
                     alignItems='center'
                     width='100%'
-                    sx={{ paddingX: '2rem' }}
+                    sx={{ paddingX: '2rem', marginBottom: '0.2rem' }}
                   >
                     <Typography variant='body2' color='primary'>{ direccion.nomenclatura }</Typography>
                     <IconButton color="secondary" aria-label="seleccionar dirección" onClick={ () => onDirectionSelection(direccion.id) } sx={{ marginLeft: '0.5rem' }}>
