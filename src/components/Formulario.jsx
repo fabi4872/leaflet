@@ -56,6 +56,9 @@ export const Formulario = ({ provincias, ciudades }) => {
   }
 
   async function onSearchDirection() {
+    //Se setea como verdadero si hay resultados para la búsqueda
+    setHasResults(true);
+
     //Se setea dataDirection como colección vacía
     setDataDirection([]);
 
@@ -105,9 +108,6 @@ export const Formulario = ({ provincias, ciudades }) => {
     //Actualiza el estado hasResults, por si hay o no resultados en la búsqueda
     if (dataDirection.length === 0) {
       setHasResults(false);
-    }
-    else {
-      setHasResults(true);
     }
   }
 
