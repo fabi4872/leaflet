@@ -7,6 +7,8 @@ import { SelectFormulario } from './SelectFormulario';
 import { Mapa } from './Mapa';
 import IconButton from '@mui/material/IconButton';
 import RoomOutlinedIcon from '@mui/icons-material/RoomOutlined';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
 const mapWidthHeightMobile = '25rem';
 const mapWidthHeightDesktop = '43rem';
@@ -17,6 +19,7 @@ export const Formulario = ({ provincias, ciudades }) => {
   const [ isMobileView, setIsMobileView ] = useState(false);
   const [ dataDirection, setDataDirection ] = useState([]);
   const [ direction, setDirection ] = useState({});
+  const [ hasResults, setHasResults ] = useState(true);
   const [ coordinatesCity, setCoordinatesCity ] = useState([ciudades[0].lng, ciudades[0].lat]);
   const [ coordinatesDirection, setCoordinatesDirection ] = useState([]);
     
@@ -33,6 +36,7 @@ export const Formulario = ({ provincias, ciudades }) => {
   });
 
   const onReestablecer = () => {
+    setHasResults(true);
     onChangeFormMultiple({
       provincia: provincias[0].value,
       ciudad: ciudades[0].value,
@@ -96,6 +100,14 @@ export const Formulario = ({ provincias, ciudades }) => {
         //Actualiza el estado dataDirection
         setDataDirection([...dataDirection, ...newDirections]);
       }
+    }
+
+    //Actualiza el estado hasResults, por si hay o no resultados en la búsqueda
+    if (dataDirection.length === 0) {
+      setHasResults(false);
+    }
+    else {
+      setHasResults(true);
     }
   }
 
@@ -193,6 +205,16 @@ export const Formulario = ({ provincias, ciudades }) => {
           ?
           (
             <>
+              {
+                ( !hasResults )
+                ?
+                <Stack sx={{ width: '100%', marginX: '0.5rem', marginY: '1rem' }} spacing={2}>
+                  <Alert severity="error">No hay resultados para la búsqueda</Alert>
+                </Stack>
+                :
+                null
+              }
+
               <Box
                 display='flex'
                 justifyContent='center'
@@ -207,7 +229,7 @@ export const Formulario = ({ provincias, ciudades }) => {
                   onClick={ onSearchDirection }
                   color='primary'
                   sx={{
-                    margin: '1.5rem 0 1rem 0'
+                    margin: '1rem 0'
                   }}
                 >
                   Buscar dirección
